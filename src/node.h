@@ -1,0 +1,30 @@
+#ifndef NODE_H
+#define NODE_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "operation.h"
+
+struct Trace {
+    struct Node *a;
+    enum Operation operation;
+    struct Node *b;
+};
+
+struct Node {
+    float value;
+    float grad;
+    struct Trace trace;
+};
+
+struct Node *node_new(float value);
+
+struct Node *node_exec(
+    struct Node *a,
+    enum Operation oper,
+    struct Node *b
+);
+
+#endif
