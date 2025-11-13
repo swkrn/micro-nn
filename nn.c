@@ -3,23 +3,37 @@
 #include "src/operation.h"
 
 int main() {
-    struct Node *n1 = node_new(5.0);
-    struct Node *n2 = node_new(2.0);
-    struct Node *r = node_exec(n1, MULTIPLY, n2);
+    struct Node *x1 = node_new(5.0);
+    struct Node *w1 = node_new(2.0);
 
-    gradient_backward(r);
+    struct Node *x1w1 = node_exec(x1, MULTIPLY, w1);
 
-    printf("%f\n", r->value);
+    struct Node *x2 = node_new(20.0);
+    struct Node *w2 = node_new(10.0);
 
-    printf("r.grad: %f\n", r->grad);
-    printf("n1.grad: %f\n", r->trace.a->grad);
-    printf("n2.grad: %f\n",  r->trace.b->grad);
+    struct Node *x2w2 = node_exec(x2, MULTIPLY, w2);
 
-    gradient_reset(r);
+    struct Node *x1w1_x2w2 = node_exec(x1w1, ADD, x2w2);
 
-    printf("r.grad: %f\n", r->grad);
-    printf("n1.grad: %f\n", r->trace.a->grad);
-    printf("n2.grad: %f\n",  r->trace.b->grad);
+    gradient_backward(x1w1_x2w2);
+
+    printf("%f\n", x1w1_x2w2->value);
+
+    printf("y.grad: %f\n", x1w1_x2w2->grad);
+
+    printf("x1.grad: %f\n", x1->grad);
+    printf("w1.grad: %f\n",  w1->grad);
+
+    printf("x2.grad: %f\n", x2->grad);
+    printf("w2.grad: %f\n",  w2->grad);
+
+    gradient_reset(x1w1_x2w2);
+
+    printf("x1.grad: %f\n", x1->grad);
+    printf("w1.grad: %f\n",  w1->grad);
+
+    printf("x2.grad: %f\n", x2->grad);
+    printf("w2.grad: %f\n",  w2->grad);
 
     return 0;
 }

@@ -14,6 +14,7 @@ struct Node *node_new(float value) {
     return new_node;
 }
 
+
 struct Node *node_exec(
     struct Node *a,
     enum Operation oper,
@@ -23,8 +24,8 @@ struct Node *node_exec(
     struct Node *new_node = node_new(new_value);
 
     new_node->trace.a = a;
-    new_node->trace.b = b;
     new_node->trace.operation = oper;
+    new_node->trace.b = b;
 
     return new_node;
 }
