@@ -20,9 +20,7 @@ float operation_exec(float a, enum Operation oper, float b) {
 
 // Unary
     case TANH: {
-        const float m = exp(a);
-        const float n = exp(-a);
-        result = ((m - n) / (m + n));
+        result = tanh(a);
         break;
     }
     }

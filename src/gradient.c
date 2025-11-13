@@ -1,12 +1,17 @@
 #include "gradient.h"
+
+#include <math.h>
+
 #include "operation.h"
 
 void _bw_add(struct Node *node);
 void _bw_multiply(struct Node *node);
+void _bw_tanh(struct Node *node);
 
 OperationBackward _backward_func[] = {
     [ADD]       = _bw_add,
     [MULTIPLY]  = _bw_multiply,
+    [TANH]      = _bw_tanh,
 };
 
 void _gradient_bw(struct Node *node);
@@ -48,4 +53,8 @@ void _bw_add(struct Node *node) {
 void _bw_multiply(struct Node *node) {
     node->trace.a->grad = node->grad * node->trace.b->value;
     node->trace.b->grad = node->grad * node->trace.a->value;
+}
+
+void _bw_tanh(struct Node *node) {
+    node->trace.a->grad = node->grad * (1 - pow(node->value, 2));
 }
