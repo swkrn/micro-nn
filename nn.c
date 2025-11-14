@@ -6,18 +6,18 @@ int main() {
     struct Node *x1 = node_new(0.5);
     struct Node *w1 = node_new(0.2);
 
-    struct Node *x1w1 = node_exec(x1, MULTIPLY, w1);
+    struct Node *x1w1 = node_exec(x1, OPER_MULTIPLY, w1);
 
     struct Node *x2 = node_new(0.7);
     struct Node *w2 = node_new(0.8);
 
-    struct Node *x2w2 = node_exec(x2, MULTIPLY, w2);
+    struct Node *x2w2 = node_exec(x2, OPER_MULTIPLY, w2);
 
-    struct Node *x1w1_x2w2 = node_exec(x1w1, ADD, x2w2);
+    struct Node *x1w1_x2w2 = node_exec(x1w1, OPER_ADD, x2w2);
 
-    struct Node *sq = node_exec(x1w1_x2w2, POW, node_new(2));
+    struct Node *sq = node_exec(x1w1_x2w2, OPER_POW, node_new(2));
 
-    struct Node *y = node_exec(sq, TANH, NULL);
+    struct Node *y = node_exec(sq, OPER_TANH, NULL);
 
     gradient_backward(y);
 

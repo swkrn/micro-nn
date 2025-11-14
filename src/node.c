@@ -9,7 +9,7 @@ struct Node *node_new(float value) {
     new_node->grad = 0;
 
     new_node->trace.a = NULL;
-    new_node->trace.operation = NONE;
+    new_node->trace.operation = OPER_NONE;
     new_node->trace.b = NULL;
     return new_node;
 }

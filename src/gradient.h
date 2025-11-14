@@ -4,8 +4,6 @@
 #include "node.h"
 #include "operation.h"
 
-typedef void (*OperationBackward)(struct Node *node);
-
 void gradient_backward(struct Node *node);
 void gradient_reset(struct Node *node);
 

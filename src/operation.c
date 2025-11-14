@@ -6,24 +6,24 @@ float operation_exec(float a, enum Operation oper, float b) {
     float result;
 
     switch (oper) {
-    case NONE:
+    case OPER_NONE:
         result = 0.0;
         break;
 
 // Binary
-    case ADD:
+    case OPER_ADD:
         result = a + b;
         break;
-    case MULTIPLY:
+    case OPER_MULTIPLY:
         result = a * b;
         break;
-    case POW: {
+    case OPER_POW: {
         result = pow(a, b);
         break;
     }
 
 // Unary
-    case TANH: {
+    case OPER_TANH: {
         result = tanh(a);
         break;
     }

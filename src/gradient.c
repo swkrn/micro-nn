@@ -4,18 +4,6 @@
 
 #include "operation.h"
 
-void _bw_add(struct Node *node);
-void _bw_multiply(struct Node *node);
-void _bw_pow(struct Node *node);
-void _bw_tanh(struct Node *node);
-
-OperationBackward _backward_func[] = {
-    [ADD]       = _bw_add,
-    [MULTIPLY]  = _bw_multiply,
-    [POW]       = _bw_pow,
-    [TANH]      = _bw_tanh,
-};
-
 void _gradient_bw(struct Node *node);
 
 void gradient_backward(struct Node *node) {
@@ -33,37 +21,48 @@ void gradient_reset(struct Node *node) {
         gradient_reset(node->trace.b);
 }
 
-// NOTE: consider this function
 void _gradient_bw(struct Node *node) {
-    if (node->trace.operation == NONE)
+    if (node->trace.operation == OPER_NONE)
         return;
 
-    _backward_func[node->trace.operation](node);
+    const float r_grad = node->grad;
+    const float r = node->value;
+
+    float *a_grad = &node->trace.a->grad;
+    float *b_grad = (node->trace.b) ? &node->trace.b->grad : NULL;
+
+    const float a = node->trace.a->value;
+    const float b = (node->trace.b) ? node->trace.b->value : 0;
+
+    switch (node->trace.operation) {
+    case OPER_NONE:
+        break;
+
+// Binary
+    case OPER_ADD:
+        *a_grad = r_grad;
+        *b_grad = r_grad;
+        break;
+    case OPER_MULTIPLY:
+        *a_grad = r_grad * b;
+        *b_grad = r_grad * a;
+        break;
+    case OPER_POW: {
+        *a_grad = r_grad * (b * pow(a, b - 1));
+        *b_grad = r_grad * (r * log(a));
+        break;
+    }
+
+// Unary
+    case OPER_TANH: {
+        *a_grad = r_grad * (1 - pow(r, 2));
+        break;
+    }
+    }
 
     if (node->trace.a)
         _gradient_bw(node->trace.a);
 
     if (node->trace.b)
         _gradient_bw(node->trace.b);
-}
-
-void _bw_add(struct Node *node) {
-    node->trace.a->grad = node->grad;
-    node->trace.b->grad = node->grad;
-}
-
-void _bw_multiply(struct Node *node) {
-    node->trace.a->grad = node->grad * node->trace.b->value;
-    node->trace.b->grad = node->grad * node->trace.a->value;
-}
-
-void _bw_pow(struct Node *node) {
-    const float a = node->trace.a->value;
-    const float b = node->trace.b->value;
-    node->trace.a->grad = node->grad * (b * pow(a, b - 1));
-    node->trace.b->grad = node->grad * node->value * log(a);
-}
-
-void _bw_tanh(struct Node *node) {
-    node->trace.a->grad = node->grad * (1 - pow(node->value, 2));
 }

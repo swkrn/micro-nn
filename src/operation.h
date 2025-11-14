@@ -2,15 +2,15 @@
 #define OPERATION_H
 
 enum Operation {
-    NONE = 0,
+    OPER_NONE = 0,
 
     // Binary
-    ADD,
-    MULTIPLY,
-    POW,
+    OPER_ADD,
+    OPER_MULTIPLY,
+    OPER_POW,
 
     // Unary
-    TANH,
+    OPER_TANH,
 };
 
 float operation_exec(float a, enum Operation oper, float b);
