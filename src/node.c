@@ -4,16 +4,18 @@
 
 struct Node *node_new(float value) {
     struct Node *new_node = malloc(sizeof(struct Node));
-
+    node_reset(new_node);
     new_node->value = value;
-    new_node->grad = 0;
-
-    new_node->trace.a = NULL;
-    new_node->trace.operation = OPER_NONE;
-    new_node->trace.b = NULL;
     return new_node;
 }
 
+struct Node *node_alloc_n(int n) {
+    struct Node *nodes = malloc(n * sizeof(struct Node));
+    while (n--) {
+        node_reset(&nodes[n]);
+    }
+    return nodes;
+}
 
 struct Node *node_exec(
     struct Node *a,
@@ -28,4 +30,13 @@ struct Node *node_exec(
     new_node->trace.b = b;
 
     return new_node;
+}
+
+void node_reset(struct Node *node) {
+    node->value = 0;
+    node->grad = 0;
+
+    node->trace.a = NULL;
+    node->trace.operation = OPER_NONE;
+    node->trace.b = NULL;
 }

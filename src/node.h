@@ -21,10 +21,14 @@ struct Node {
 
 struct Node *node_new(float value);
 
+struct Node *node_alloc_n(int n);
+
 struct Node *node_exec(
     struct Node *a,
     enum Operation oper,
     struct Node *b
 );
+
+void node_reset(struct Node *node);
 
 #endif
