@@ -7,6 +7,7 @@ enum Operation {
     // Binary
     ADD,
     MULTIPLY,
+    POW,
 
     // Unary
     TANH,

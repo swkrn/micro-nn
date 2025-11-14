@@ -17,6 +17,10 @@ float operation_exec(float a, enum Operation oper, float b) {
     case MULTIPLY:
         result = a * b;
         break;
+    case POW: {
+        result = pow(a, b);
+        break;
+    }
 
 // Unary
     case TANH: {
