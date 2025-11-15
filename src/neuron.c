@@ -23,12 +23,12 @@ void neuron_init(struct Neuron *neuron, int n_in) {
     neuron->n_in = n_in;
 };
 
-struct Node *neuron_exec(struct Neuron *neuron, struct Node *x, int n_in) {
+struct Node *neuron_exec(struct Neuron *neuron, struct Node **x, int n_in) {
     assert(neuron->n_in == n_in);
 
     struct Node *sum = node_new(0.0);
     for (int i = 0; i < n_in; i++) {
-        struct Node *wx = node_exec((x + i), OPER_MULTIPLY, (neuron->w + i));
+        struct Node *wx = node_exec(x[i], OPER_MULTIPLY, (neuron->w + i));
         sum = node_exec(sum, OPER_ADD, wx);
     }
     return sum;

@@ -7,6 +7,7 @@ struct MLP {
 };
 
 struct MLP *mlp_new(int n_in, int *n_outs, int n_outs_count);
+struct Node **mlp_exec(struct MLP *mlp, struct Node **x, int n_x);
 void mlp_print(struct MLP *mlp, int space);
 
 #endif

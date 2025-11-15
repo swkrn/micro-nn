@@ -12,7 +12,7 @@ struct Layer *layer_new(int n_out, int n_in) {
     return layer;
 }
 
-struct Node **layer_exec(struct Layer *layer, struct Node *x, int n_in, int *n_out) {
+struct Node **layer_exec(struct Layer *layer, struct Node **x, int n_in, int *n_out) {
     *n_out = layer->n_neuron;
 
     struct Node **outputs = malloc((*n_out) * sizeof(struct Node *));
