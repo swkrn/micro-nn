@@ -31,7 +31,8 @@ struct Node *neuron_exec(struct Neuron *neuron, struct Node **x, int n_in) {
         struct Node *wx = node_exec(x[i], OPER_MULTIPLY, (neuron->w + i));
         sum = node_exec(sum, OPER_ADD, wx);
     }
-    return sum;
+    struct Node *out = node_exec(sum, OPER_TANH, NULL);
+    return out;
 }
 
 void neuron_print(struct Neuron *neuron, int space) {
