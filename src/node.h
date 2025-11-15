@@ -17,6 +17,7 @@ struct Node {
     float value;
     float grad;
     struct Trace trace;
+    bool visted;
 };
 
 struct Node *node_new(float value);

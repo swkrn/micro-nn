@@ -43,12 +43,20 @@ int main() {
 
     printf("\n");
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 20; i++) {
         // forward pass
         struct Node *loss = node_new(0.0);
         for (int j = 0; j < DATA_COUNT; j++) {
             y_pred[j] = mlp_exec(mlp, x[j], N_INPUT);
-            loss = node_exec(node_exec(y[j], OPER_SUB, y_pred[j][0]), OPER_POW, node_new(2));
+            loss = node_exec(
+                loss,
+                OPER_ADD,
+                node_exec(
+                    node_exec(y[j], OPER_SUB, y_pred[j][0]),
+                    OPER_POW,
+                    node_new(2)
+                )
+            );
         }
 
         // backward pass
@@ -60,15 +68,14 @@ int main() {
             params[j]->value += 0.1 * params[j]->grad;
         }
 
-        printf("[%2d] ", i);
-        node_print(loss, false);
-    }
-    printf("\n");
-
-    printf("Y Prediction\n");
-    for (int i = 0; i < DATA_COUNT; i++) {
-        printf("[%d] ", i);
-        printf("y: %f, y_pred: %f\n", y[i]->value, y_pred[i][0]->value);
+        printf("[%2d] loss: %f\n", i, loss->value);
+        for (int i = 0; i < DATA_COUNT; i++) {
+            printf("    [%d] ", i);
+            // node_print(y_pred[i][0], 0);
+            printf("y: %f, y_pred: %f\n", y[i]->value, y_pred[i][0]->value);
+        }
+        // mlp_print(mlp, 4);
+        printf("--------------------\n");
     }
 
     return 0;

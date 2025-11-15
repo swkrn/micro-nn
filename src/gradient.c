@@ -13,6 +13,7 @@ void gradient_backward(struct Node *node) {
 
 void gradient_reset(struct Node *node) {
     node->grad = 0.0;
+    node->visted = false;
 
     if (node->trace.a)
         gradient_reset(node->trace.a);
@@ -24,6 +25,11 @@ void gradient_reset(struct Node *node) {
 void _gradient_bw(struct Node *node) {
     if (node->trace.operation == OPER_NONE)
         return;
+
+    if (node->visted) {
+        goto trace_label;
+    }
+    node->visted = true;
 
     const float r_grad = node->grad;
     const float r = node->value;
@@ -41,26 +47,27 @@ void _gradient_bw(struct Node *node) {
 // Binary
     case OPER_ADD:
     case OPER_SUB:
-        *a_grad = r_grad;
-        *b_grad = r_grad;
+        *a_grad += r_grad;
+        *b_grad += r_grad;
         break;
     case OPER_MULTIPLY:
-        *a_grad = r_grad * b;
-        *b_grad = r_grad * a;
+        *a_grad += r_grad * b;
+        *b_grad += r_grad * a;
         break;
     case OPER_POW: {
-        *a_grad = r_grad * (b * pow(a, b - 1));
-        *b_grad = r_grad * (r * log(a));
+        *a_grad += r_grad * (b * pow(a, b - 1));
+        *b_grad += r_grad * (r * log(a));
         break;
     }
 
 // Unary
     case OPER_TANH: {
-        *a_grad = r_grad * (1 - pow(r, 2));
+        *a_grad += r_grad * (1 - pow(r, 2));
         break;
     }
     }
 
+trace_label:
     if (node->trace.a)
         _gradient_bw(node->trace.a);
 

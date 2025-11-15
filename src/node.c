@@ -35,6 +35,7 @@ struct Node *node_exec(
 void node_init(struct Node *node) {
     node->value = 0;
     node->grad = 0;
+    node->visted = false;
 
     node->trace.a = NULL;
     node->trace.operation = OPER_NONE;
@@ -56,22 +57,22 @@ void node_print(struct Node *node, bool showTrace) {
         case OPER_NONE:
             break;
         case OPER_ADD:
-            printf("%f + %f\n", a, b);
+            printf("%f + %f", a, b);
             break;
         case OPER_SUB:
-            printf("%f - %f\n", a, b);
+            printf("%f - %f", a, b);
             break;
         case OPER_MULTIPLY:
-            printf("%f * %f\n", a, b);
+            printf("%f * %f", a, b);
             break;
         case OPER_POW:
-            printf("pow(%f, %f)\n", a, b);
+            printf("pow(%f, %f)", a, b);
             break;
         case OPER_TANH:
-            printf("tanh(%f)\n", a);
+            printf("tanh(%f)", a);
         break;
         }
-        printf("]\n");
+        printf("]");
     } else {
 out:
         printf("\n");
