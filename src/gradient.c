@@ -40,6 +40,7 @@ void _gradient_bw(struct Node *node) {
 
 // Binary
     case OPER_ADD:
+    case OPER_SUB:
         *a_grad = r_grad;
         *b_grad = r_grad;
         break;

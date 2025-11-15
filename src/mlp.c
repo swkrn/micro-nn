@@ -27,6 +27,36 @@ struct Node **mlp_exec(struct MLP *mlp, struct Node **x, int n_x) {
     return out;
 }
 
+struct Node **mlp_parameters(struct MLP *mlp, int *n_params) {
+    *n_params = 0;
+    for (int i = 0; i < mlp->n_layer; i++) {
+        struct Layer *layer = mlp->layers[i];
+
+        for (int j = 0; j < layer->n_neuron; j++) {
+            struct Neuron *neuron = &layer->neurons[j];
+            *n_params += neuron->n_in;
+        }
+    }
+
+    struct Node **params = malloc((*n_params) * sizeof(struct Node *));
+
+    int counter = 0;
+    struct Node **tmp_p = params;
+    for (int i = 0; i < mlp->n_layer; i++) {
+        struct Layer *layer = mlp->layers[i];
+
+        for (int j = 0; j < layer->n_neuron; j++) {
+            struct Neuron *neuron = &layer->neurons[j];
+
+            for (int k = 0; k < neuron->n_in; k++) {
+                *tmp_p++ = &neuron->w[k];
+            }
+        }
+    }
+
+    return params;
+}
+
 void mlp_print(struct MLP *mlp, int space) {
     print_space(space);
     printf("MLP(n_layer=%d)\n", mlp->n_layer);

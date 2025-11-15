@@ -6,6 +6,7 @@ enum Operation {
 
     // Binary
     OPER_ADD,
+    OPER_SUB,
     OPER_MULTIPLY,
     OPER_POW,
 

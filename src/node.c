@@ -58,6 +58,9 @@ void node_print(struct Node *node, bool showTrace) {
         case OPER_ADD:
             printf("%f + %f\n", a, b);
             break;
+        case OPER_SUB:
+            printf("%f - %f\n", a, b);
+            break;
         case OPER_MULTIPLY:
             printf("%f * %f\n", a, b);
             break;

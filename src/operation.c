@@ -14,6 +14,9 @@ float operation_exec(float a, enum Operation oper, float b) {
     case OPER_ADD:
         result = a + b;
         break;
+    case OPER_SUB:
+        result = a - b;
+        break;
     case OPER_MULTIPLY:
         result = a * b;
         break;
