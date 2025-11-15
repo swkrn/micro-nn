@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdbool.h>
 
 #include "operation.h"
 
@@ -30,5 +30,7 @@ struct Node *node_exec(
 );
 
 void node_init(struct Node *node);
+
+void node_print(struct Node *node, bool showTrace);
 
 #endif

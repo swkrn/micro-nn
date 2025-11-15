@@ -33,3 +33,10 @@ struct Node *neuron_exec(struct Neuron *neuron, struct Node *x, int n_in) {
     }
     return sum;
 }
+
+void neuron_print(struct Neuron *neuron) {
+    printf("Neuron(n_in=%d, b=%f)\n", neuron->n_in, neuron->b.value);
+    for (int i = 0; i < neuron->n_in; i++) {
+        printf("→ w[%d] = %f\n", i, neuron->w[i].value);
+    }
+}

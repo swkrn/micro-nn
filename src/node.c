@@ -40,3 +40,37 @@ void node_init(struct Node *node) {
     node->trace.operation = OPER_NONE;
     node->trace.b = NULL;
 }
+
+void node_print(struct Node *node, bool showTrace) {
+    printf("Node(%f, grad=%f)", node->value, node->grad);
+
+    if (showTrace) {
+        if (node->trace.operation == OPER_NONE) {
+            goto out;
+        }
+        const float a = node->trace.a->value ;
+        const float b = (node->trace.b) ? node->trace.b->value : 0.0;
+
+        printf(" [");
+        switch (node->trace.operation) {
+        case OPER_NONE:
+            break;
+        case OPER_ADD:
+            printf("%f + %f\n", a, b);
+            break;
+        case OPER_MULTIPLY:
+            printf("%f * %f\n", a, b);
+            break;
+        case OPER_POW:
+            printf("pow(%f, %f)\n", a, b);
+            break;
+        case OPER_TANH:
+            printf("tanh(%f)\n", a);
+        break;
+        }
+        printf("]\n");
+    } else {
+out:
+        printf("\n");
+    }
+}

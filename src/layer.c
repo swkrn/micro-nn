@@ -20,3 +20,12 @@ struct Node **layer_exec(struct Layer *layer, struct Node *x, int n_in, int *n_o
     }
     return outputs;
 }
+
+void layer_print(struct Layer *layer) {
+    printf("\n");
+    printf("Layer(n_neuron=%d)\n", layer->n_neuron);
+    for (int i = 0; i < layer->n_neuron; i++) {
+        neuron_print(&layer->neurons[i]);
+    }
+    printf("\n");
+}
