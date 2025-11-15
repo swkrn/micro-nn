@@ -1,0 +1,22 @@
+#include "layer.h"
+
+#include <stdlib.h>
+
+#include "neuron.h"
+
+struct Layer *layer_new(int n_in, int n_out) {
+    struct Layer *layer = malloc(sizeof(struct Layer));
+    layer->neurons = neuron_alloc_n(n_out, n_in);
+    layer->n_neuron = n_out;
+    return layer;
+}
+
+struct Node *layer_exec(struct Layer *layer, struct Node *x, int n_in, int *n_out) {
+    *n_out = layer->n_neuron;
+
+    struct Node **outputs = malloc((*n_out) * sizeof(struct Node *));
+    for (int i = 0; i < *n_out; i++) {
+        outputs[i] = neuron_exec(&layer->neurons[i], x, n_in);
+    }
+    return *outputs;
+}

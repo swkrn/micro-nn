@@ -2,16 +2,22 @@
 #include "src/node.h"
 
 int main() {
-    struct Neuron *neuron = neuron_new(3);
+    const int n_neuron  = 2;
+    const int n_input = 3;
 
-    struct Node *nodes = node_alloc_n(3);
-    nodes[0].value = 8;
-    nodes[1].value = 10;
-    nodes[2].value = 5;
+    struct Neuron *neurons = neuron_alloc_n(n_neuron, n_input);
 
-    printf("%f, %f, %f\n", neuron->w[0].value, neuron->w[1].value, neuron->w[2].value);
+    struct Node *nodes = node_alloc_n(n_input);
+    for (int i = 0; i < n_input; i++) {
+        nodes[i].value = (i + 1) * 2;
+    }
 
-    struct Node *result = neuron_exec(neuron, nodes, 3);
+    for (int i = 0; i < n_neuron; i++) {
+        for (int j = 0; j < n_input; j++)
+        printf("neuron->neuron[%d].w[%d]: %f\n", i, j, neurons[i].w[j].value);
+    }
+
+    struct Node *result = neuron_exec(neurons, nodes, 3);
 
     printf("result.value: %f", result->value);
 

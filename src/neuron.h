@@ -9,7 +9,8 @@ struct Neuron {
     int n_in;
 };
 
-struct Neuron *neuron_new(int n_in);
+struct Neuron *neuron_alloc_n(int n, int n_in);
+void neuron_init(struct Neuron *neuron, int n_in);
 struct Node *neuron_exec(struct Neuron *neuron, struct Node *x, int n_in);
 
 #endif

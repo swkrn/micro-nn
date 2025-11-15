@@ -4,7 +4,7 @@
 
 struct Node *node_new(float value) {
     struct Node *new_node = malloc(sizeof(struct Node));
-    node_reset(new_node);
+    node_init(new_node);
     new_node->value = value;
     return new_node;
 }
@@ -12,7 +12,7 @@ struct Node *node_new(float value) {
 struct Node *node_alloc_n(int n) {
     struct Node *nodes = malloc(n * sizeof(struct Node));
     while (n--) {
-        node_reset(&nodes[n]);
+        node_init(&nodes[n]);
     }
     return nodes;
 }
@@ -32,7 +32,7 @@ struct Node *node_exec(
     return new_node;
 }
 
-void node_reset(struct Node *node) {
+void node_init(struct Node *node) {
     node->value = 0;
     node->grad = 0;
 

@@ -29,6 +29,6 @@ struct Node *node_exec(
     struct Node *b
 );
 
-void node_reset(struct Node *node);
+void node_init(struct Node *node);
 
 #endif

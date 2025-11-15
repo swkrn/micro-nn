@@ -6,17 +6,21 @@
 #include "operation.h"
 #include "common.h"
 
-struct Neuron *neuron_new(int n_in) {
-    struct Neuron *neuron = malloc(sizeof(struct Neuron));
+struct Neuron *neuron_alloc_n(int n, int n_in) {
+    struct Neuron *neurons = malloc(n * sizeof(struct Neuron));
+    for (int i = 0; i < n; i++) {
+        neuron_init(&neurons[i], n_in);
+    }
+    return neurons;
+}
 
+void neuron_init(struct Neuron *neuron, int n_in) {
     neuron->w = node_alloc_n(n_in);
     for (int i = 0; i < n_in; i++) {
         neuron->w[i].value = RAND_FLOAT(-1, 1);
     }
     neuron->b = *node_new(0.0);
     neuron->n_in = n_in;
-
-    return neuron;
 };
 
 struct Node *neuron_exec(struct Neuron *neuron, struct Node *x, int n_in) {
