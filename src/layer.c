@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "common.h"
 #include "neuron.h"
 
 struct Layer *layer_new(int n_out, int n_in) {
@@ -21,9 +22,10 @@ struct Node **layer_exec(struct Layer *layer, struct Node *x, int n_in, int *n_o
     return outputs;
 }
 
-void layer_print(struct Layer *layer) {
-    printf("    Layer(n_neuron=%d)\n", layer->n_neuron);
+void layer_print(struct Layer *layer, int space) {
+    print_space(space);
+    printf("Layer(n_neuron=%d)\n", layer->n_neuron);
     for (int i = 0; i < layer->n_neuron; i++) {
-        neuron_print(&layer->neurons[i]);
+        neuron_print(&layer->neurons[i], space + 2);
     }
 }

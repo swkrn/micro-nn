@@ -4,6 +4,7 @@
 #include <stdarg.h>
 
 #include "layer.h"
+#include "common.h"
 
 struct MLP *mlp_new(int n_in, int *n_outs, int n_outs_count) {
     struct MLP *mlp = malloc(sizeof(struct MLP));
@@ -18,9 +19,10 @@ struct MLP *mlp_new(int n_in, int *n_outs, int n_outs_count) {
     return mlp;
 }
 
-void mlp_print(struct MLP *mlp) {
+void mlp_print(struct MLP *mlp, int space) {
+    print_space(space);
     printf("MLP(n_layer=%d)\n", mlp->n_layer);
     for (int i = 0; i < mlp->n_layer; i++) {
-        layer_print(mlp->layers[i]);
+        layer_print(mlp->layers[i], space + 2);
     }
 }

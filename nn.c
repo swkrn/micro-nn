@@ -10,7 +10,7 @@ int main() {
     int *n_outs  = array_int(n_outs_count, 1, 5);
 
     struct MLP *mlp = mlp_new(n_input, n_outs, n_outs_count);
-    mlp_print(mlp);
+    mlp_print(mlp, 0);
 
     return 0;
 }

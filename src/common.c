@@ -14,3 +14,9 @@ int *array_int(int n, ...) {
 
     return array;
 }
+
+void print_space(int n) {
+    while (n--) {
+        printf(" ");
+    }
+}
