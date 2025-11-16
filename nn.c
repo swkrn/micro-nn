@@ -1,5 +1,5 @@
+#include "mnist/reader.h"
 #include "src/gradient.h"
-#include "src/layer.h"
 #include "src/mlp.h"
 #include "src/common.h"
 #include "src/node.h"
@@ -10,51 +10,64 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N_INPUT 3
-#define DATA_COUNT 4
+// -1 to 1
+float normalize(int value, int min, int max) {
+    return (((float)(value - min) / (float)(max - min)) * 2) - 1;
+}
 
 int main() {
     srand(time(NULL));
 
-    const int n_outs_count = 3;
+    const int n_layer = 3;
 
-    struct Node *x[DATA_COUNT][N_INPUT] = {
-       {node_new(2.0), node_new(3.0), node_new(-1.0)},
-       {node_new(3.0), node_new(-1.0), node_new(0.5)},
-       {node_new(0.5), node_new(1.0), node_new(1.0)},
-       {node_new(1.0), node_new(1.0), node_new(-1.0)},
-    };
+    struct Images train_mnist;
+    reader_read_images(
+        "mnist/dataset/train-images.idx3-ubyte",
+        "mnist/dataset/train-labels.idx1-ubyte",
+        &train_mnist
+    );
+    reader_show_images(&train_mnist, 0, 10);
 
-    struct Node *y[DATA_COUNT] = {
-        node_new(1.0),
-        node_new(-1.0),
-        node_new(-1.0),
-        node_new(1.0),
-    };
+    const int n_train = 1000;
 
-    struct MLP *mlp = mlp_new(N_INPUT, array_int(n_outs_count, 4, 4, 1), n_outs_count);
-
-    struct Node ***y_pred = malloc(DATA_COUNT * sizeof(struct Node **));
+    struct MLP *mlp = mlp_new(
+        train_mnist.each_size,
+        array_int(n_layer, 20, 10, 1),
+        n_layer
+    );
 
     int n_params;
     struct Node **params = mlp_parameters(mlp, &n_params);
-    printf("n_params: %d\n", n_params);
-    mlp_print(mlp, 0);
 
-    printf("\n");
+    struct Node **labels_true = malloc(n_train * sizeof(struct Node *));
+    for (int img_index = 0; img_index < n_train; img_index++) {
+        labels_true[img_index] = node_new(normalize(train_mnist.labels[img_index], 0, 9));
+    }
+    struct Node ***labels_pred = malloc(n_train * sizeof(struct Node **));
 
-    for (int i = 0; i < 20; i++) {
+    struct Node *loss = node_new(0);
+    for (int iter = 0; iter < 20; iter++) {
         // forward pass
-        struct Node *loss = node_new(0.0);
-        for (int j = 0; j < DATA_COUNT; j++) {
-            y_pred[j] = mlp_exec(mlp, x[j], N_INPUT);
+        for (int img_index = 0; img_index < n_train; img_index++) {
+             uint8_t *image = train_mnist.images[img_index];
+
+            // normalize
+            struct Node **normalized_image = malloc(train_mnist.each_size * sizeof(struct Node *));
+
+            // printf("\n - [%2d] image index: %d\n", iter, img_index);
+            for (int pixel = 0; pixel < train_mnist.each_size; pixel++) {
+                normalized_image[pixel] = node_new(normalize(image[pixel], 0, 255));
+            }
+
+            labels_pred[img_index] = mlp_exec(mlp, normalized_image, train_mnist.each_size);
             loss = node_exec(
                 loss,
                 OPER_ADD,
                 node_exec(
-                    node_exec(y[j], OPER_SUB, y_pred[j][0]),
-                    OPER_POW,
-                    node_new(2)
+                    node_exec(
+                        labels_true[img_index], OPER_SUB, labels_pred[img_index][0]),
+                        OPER_POW,
+                        node_new(2)
                 )
             );
         }
@@ -64,18 +77,20 @@ int main() {
         gradient_backward(loss);
 
         // update parameters
-        for (int j = 0; j < n_params; j++) {
-            params[j]->value += 0.1 * params[j]->grad;
+        for (int i = 0; i < n_params; i++) {
+            params[i]->value += 0.001 * params[i]->grad;
         }
 
-        printf("[%2d] loss: %f\n", i, loss->value);
-        for (int i = 0; i < DATA_COUNT; i++) {
-            printf("    [%d] ", i);
+        // print samples
+        printf("[%2d] loss: %f\n", iter, loss->value);
+        for (int img_index = 0; img_index < 10; img_index++) {
+            printf("     [%2d] ", img_index);
             // node_print(y_pred[i][0], 0);
-            printf("y: %f, y_pred: %f\n", y[i]->value, y_pred[i][0]->value);
+            printf("y: %f, y_pred: %f\n", labels_true[img_index]->value, labels_pred[img_index][0]->value);
         }
         // mlp_print(mlp, 4);
         printf("--------------------\n");
+
     }
 
     return 0;
